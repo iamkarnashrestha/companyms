@@ -1,0 +1,39 @@
+
+services:
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    environment:
+      POSTGRES_USER: karna
+      POSTGRES_PASSWORD: karna
+      POSTGRES_DB: jobapp  # Or any database you're using
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - mynetwork
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_container
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user-name@domain-name.com
+      PGADMIN_DEFAULT_PASSWORD: strong-password
+    networks:
+      - mynetwork  # pgAdmin will be on the same network
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+networks:
+  mynetwork:
+    driver: bridge  # Create a bridge network for communication between containers
+
+volumes:
+  postgres_data:
+  pgadmin_data:
